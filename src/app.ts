@@ -24,8 +24,12 @@ app.set("trust proxy", 1);
 // Images are loaded by the admin portal and the public website, which live on other origins.
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 // CORS_ORIGINS is a comma-separated list. Exact origins, or a wildcard host such as https://*.vercel.app.
+const allowedOrigins = new Set([
+   "https://kanzul-islam-portal.vercel.app",
+  ...env.corsOrigins,
+]);
 const originAllowed = (origin: string) =>
-  env.corsOrigins.some((o) => {
+  [...allowedOrigins].some((o) => {
     if (o === origin) return true;
     if (!o.includes("*")) return false;
     // "https://*.vercel.app": the part before and after the * must match, and the * stands for one host label.
