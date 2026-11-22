@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.ts": { "includeFiles": "uploads/**", "maxDuration": 30 }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
+}

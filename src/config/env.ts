@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import os from "os";
 import path from "path";
 
 dotenv.config();
@@ -34,7 +35,10 @@ export const env = {
   rateMax: Number(clean(process.env.RATE_LIMIT_MAX, "300")),
   authRateMax: Number(clean(process.env.AUTH_RATE_LIMIT_MAX, "20")),
   inquiryRateMax: Number(clean(process.env.INQUIRY_RATE_LIMIT_MAX, "10")),
-  uploadDir: path.resolve(process.cwd(), clean(process.env.UPLOAD_DIR, "uploads")),
+  // Files shipped with the code (default images). Read-only on Vercel.
+  bundledUploadDir: path.resolve(process.cwd(), "uploads"),
+  // Where new uploads are written. Vercel only allows /tmp, which is temporary — use cloud storage for permanent uploads.
+  uploadDir: process.env.VERCEL ? path.join(os.tmpdir(), "uploads") : path.resolve(process.cwd(), clean(process.env.UPLOAD_DIR, "uploads")),
   maxFileMb: Number(clean(process.env.MAX_FILE_SIZE_MB, "5")),
   allowedImageTypes: clean(
     process.env.ALLOWED_IMAGE_TYPES,

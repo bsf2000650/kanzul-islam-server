@@ -28,6 +28,7 @@ app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
 app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
 app.use("/uploads", express.static(env.uploadDir, { maxAge: "7d" }));
+if (env.bundledUploadDir !== env.uploadDir) app.use("/uploads", express.static(env.bundledUploadDir, { maxAge: "7d" }));
 
 const api = express.Router();
 // Throttle anonymous traffic (the public site, login attempts). Signed-in portal requests carry a Bearer token and are

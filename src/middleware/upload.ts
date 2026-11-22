@@ -5,7 +5,8 @@ import fs from "fs";
 import { env } from "../config/env";
 import { ApiError } from "../utils/ApiError";
 
-fs.mkdirSync(env.uploadDir, { recursive: true });
+// The deployed bundle is read-only on serverless hosts, so never crash if the folder can't be created.
+try { fs.mkdirSync(env.uploadDir, { recursive: true }); } catch { /* read-only file system */ }
 
 export const upload = multer({
   storage: multer.diskStorage({
