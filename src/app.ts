@@ -23,7 +23,23 @@ export const app = express();
 app.set("trust proxy", 1);
 // Images are loaded by the admin portal and the public website, which live on other origins.
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
-app.use(cors({ origin: env.corsOrigins, credentials: true }));
+// CORS_ORIGINS is a comma-separated list. Exact origins, or a wildcard host such as https://*.vercel.app.
+const originAllowed = (origin: string) =>
+  env.corsOrigins.some((o) => {
+    if (o === origin) return true;
+    if (!o.includes("*")) return false;
+    // "https://*.vercel.app": the part before and after the * must match, and the * stands for one host label.
+    const [head, tail] = o.split("*");
+    const middle = origin.slice(head.length, origin.length - tail.length);
+    return origin.startsWith(head) && origin.endsWith(tail) && middle.length > 0 && !/[./:]/.test(middle);
+  });
+app.use(cors({
+  origin: (origin, cb) => cb(null, !origin || originAllowed(origin)), // no Origin header = curl / server-to-server
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 86400,
+}));
 app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
 app.use(express.json({ limit: "2mb" }));
 app.use(cookieParser());
