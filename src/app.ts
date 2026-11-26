@@ -27,7 +27,8 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 const allowedOrigins = new Set([
   "https://kanzul-islam-portal.vercel.app",
   "https://skillcells.vercel.app",
-  "https://www.kinstitutes.com/",
+  "https://kinstitutes.com",
+  "https://www.kinstitutes.com",
   ...env.corsOrigins,
 ]);
 const originAllowed = (origin: string) =>
