@@ -25,7 +25,8 @@ app.set("trust proxy", 1);
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 // CORS_ORIGINS is a comma-separated list. Exact origins, or a wildcard host such as https://*.vercel.app.
 const allowedOrigins = new Set([
-   "https://kanzul-islam-portal.vercel.app",
+  "https://kanzul-islam-portal.vercel.app",
+  "https://skillcells.vercel.app",
   ...env.corsOrigins,
 ]);
 const originAllowed = (origin: string) =>
